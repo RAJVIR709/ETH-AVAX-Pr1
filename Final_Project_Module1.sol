@@ -3,31 +3,36 @@ Write a smart contract that implements the require(), assert() and revert() stat
 */
 
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
 
-contract ErrorHandling
-{
-    
-    uint public balance = 0;
+// write a smart contract that implements the require(), assert() and revert() statements.
 
-    //Cannot withdraw more than we have as balance
-    function withdraw(uint amount) public   {
-        require(balance > amount, "You do not have enough balance to transfer!");
-        balance -= amount;
+pragma solidity 0.8.18;
+
+contract ErrorHandlingContract {
+    uint256 public balance;
+
+    constructor() {
+        balance = 0;
     }
 
-    //Cannot deposit if balance results in value greater than 500
-    function deposit(uint amount) public   {
+    function deposit(uint256 amount) external {
+        require(amount > 0, "Deposit amount must be greater than zero");
         balance += amount;
-        if (balance > 500) {
-            revert("Your balance is exceeding the limit!");
+    }
+
+    function withdraw(uint256 amount) external {
+        require(amount > 0, "Withdrawal amount must be greater than zero");
+        
+        if (amount > balance) {
+            revert("Insufficient balance"); // revert statement
+        }
+        else {
+            balance -= amount;
         }
     }
 
-    //Checks if the balance is equals to zero
-    function isempty() public view returns (string memory){
-        assert(balance == 0);
-        return "Sorry! You have no money for the transaction.";
-    }
-
+    function checkBalance() external view returns (uint256) {
+        assert(balance >= 0); // assert statement
+        return balance;
+    }
 }
